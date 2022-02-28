@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    {{ include "simpleapp.ms.labels" . | nindent 4}}
+  name: {{ template "simpleapp.ms.fullname" . }}
+spec:
+  ports:
+  - port: {{ .Values.ms.service.port }}
+    targetPort: {{ .Values.ms.service.targetPort }}
+    protocol: TCP
+    name: http
+  selector:
+    {{ include "simpleapp.ms.matchLabels" . | nindent 4}}
+  type: ClusterIP

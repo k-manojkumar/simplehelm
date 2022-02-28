@@ -1,0 +1,176 @@
+---
+# Source: simpleapp/templates/ms-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    
+    component: "appms"
+    app: simpleapp
+    release: simpleapp
+    chart: simpleapp-1.0.0
+    heritage: Helm
+  name: simpleapp-simpleapp-appms
+spec:
+  ports:
+  - port: 7801
+    targetPort: 8880
+    protocol: TCP
+    name: http
+  selector:
+    
+    component: "appms"
+    app: simpleapp
+    release: simpleapp
+  type: ClusterIP
+---
+# Source: simpleapp/templates/ui-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    
+    component: "appui"
+    app: simpleapp
+    release: simpleapp
+    chart: simpleapp-1.0.0
+    heritage: Helm
+  name: simpleapp-simpleapp-appui
+spec:
+  ports:
+  - port: 7800
+    targetPort: 8081
+    protocol: TCP
+    name: http
+  selector:
+    
+    component: "appui"
+    app: simpleapp
+    release: simpleapp
+  type: NodePort
+---
+# Source: simpleapp/templates/ms-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    
+    component: "appms"
+    app: simpleapp
+    release: simpleapp
+    chart: simpleapp-1.0.0
+    heritage: Helm
+  name: simpleapp-simpleapp-appms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      
+      component: "appms"
+      app: simpleapp
+      release: simpleapp
+  template:
+    metadata:
+      labels:
+        
+        component: "appms"
+        app: simpleapp
+        release: simpleapp
+        chart: simpleapp-1.0.0
+        heritage: Helm
+    spec:
+      containers:
+      - image: "myms:1"
+        imagePullPolicy: IfNotPresent
+        name: simpleapp-simpleapp-appms
+        resources: {}
+        ports:
+          - containerPort: 8081
+---
+# Source: simpleapp/templates/ui-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    
+    component: "appui"
+    app: simpleapp
+    release: simpleapp
+    chart: simpleapp-1.0.0
+    heritage: Helm
+  name: simpleapp-simpleapp-appui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      
+      component: "appui"
+      app: simpleapp
+      release: simpleapp
+  template:
+    metadata:
+      labels:
+        
+        component: "appui"
+        app: simpleapp
+        release: simpleapp
+        chart: simpleapp-1.0.0
+        heritage: Helm
+    spec:
+      containers:
+      - image: "myui:1"
+        imagePullPolicy: IfNotPresent
+        name: simpleapp-simpleapp-appui
+        resources: {}
+        ports:
+          - containerPort: 8081
+---
+# Source: simpleapp/templates/ms-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    
+    component: "appms"
+    app: simpleapp
+    release: simpleapp
+    chart: simpleapp-1.0.0
+    heritage: Helm
+  name: simpleapp-simpleapp-appms
+spec:
+  rules:
+  - host: myapp.kmk
+    http:
+      paths:
+      - path: /DevOpsService
+        pathType: Prefix
+        backend:
+          service:
+            name: simpleapp-simpleapp-appms
+            port: 
+              number: 7801
+---
+# Source: simpleapp/templates/ui-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    
+    component: "appui"
+    app: simpleapp
+    release: simpleapp
+    chart: simpleapp-1.0.0
+    heritage: Helm
+  name: simpleapp-simpleapp-appui
+spec:
+  rules:
+  - host: myapp.kmk
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: simpleapp-simpleapp-appui
+            port: 
+              number: 7800

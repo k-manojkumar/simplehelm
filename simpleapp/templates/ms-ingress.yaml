@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    {{ include "simpleapp.ms.labels" . | nindent 4}}
+  name: {{ template "simpleapp.ms.fullname" . }}
+spec:
+  rules:
+  - host: {{ .Values.ms.ingress.host }}
+    http:
+      paths:
+      - path: /DevOpsService
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ template "simpleapp.ms.fullname" . }}
+            port: 
+              number: {{ .Values.ms.service.port }}

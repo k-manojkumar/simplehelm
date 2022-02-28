@@ -1,0 +1,4 @@
+apiVersion: v1
+name: simpleapp
+description: simple app deployed using helm chart to run on kubernetes
+version: 1.0.0

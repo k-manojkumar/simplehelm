@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    {{ include "simpleapp.ms.labels" . | nindent 4}}
+  name: {{ template "simpleapp.ms.fullname" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{ include "simpleapp.ms.matchLabels" . | nindent 6}}
+  template:
+    metadata:
+      labels:
+        {{ include "simpleapp.ms.labels" . | nindent 8}}
+    spec:
+      containers:
+      - image: "{{ .Values.ms.image.name }}:{{ .Values.ms.image.tag }}"
+        imagePullPolicy: {{ .Values.ms.image.pullPolicy }}
+        name: {{ template "simpleapp.ms.fullname" . }}
+        resources: {}
+        ports:
+          - containerPort: 8081

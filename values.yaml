@@ -1,0 +1,25 @@
+ui:
+  name: appui
+  namespace: sample-ns
+  image:
+    name: myui
+    tag: 2
+    pullPolicy: IfNotPresent
+  service:
+    port: 7800
+    targetPort: 80
+  ingress:
+    host: myapp.kmk
+
+ms:
+  name: appms
+  namespace: sample-ns
+  image:
+    name: myms
+    tag: 2
+    pullPolicy: IfNotPresent
+  service:
+    port: 7801
+    targetPort: 8880
+  ingress:
+    host: myapp.kmk
